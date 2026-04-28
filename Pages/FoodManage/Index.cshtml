@@ -1,0 +1,60 @@
+@page
+@model FoodManageModel
+
+<h1>菜色管理（管理者）</h1>
+
+<form method="post">
+    <input type="text" name="NewFoodName" placeholder="新增菜色名稱"
+           style="font-size:18px;" />
+    <button type="submit">新增</button>
+</form>
+
+<hr />
+
+<div style="margin-bottom:15px;">
+    <a asp-page="./Index">全部</a> |
+    <a asp-page="./Index" asp-route-FilterType="Main">主菜</a> |
+    <a asp-page="./Index" asp-route-FilterType="Side">配菜</a>
+</div>
+
+<table border="1" cellpadding="8" style="font-size:18px;">
+    <tr style="background:#f5f5f5;">
+        <th>菜色</th>
+        <th>分類</th>
+        <th>啟用狀態</th>
+        <th>動作</th>
+    </tr>
+
+@foreach (var f in Model.Foods)
+{
+    <tr>
+        <td>@f.Name</td>
+
+		<td style="color:@(f.FoodType == FoodType.Main ? "#e65100" : "#2e7d32"); font-weight:bold;">
+			@(f.FoodType == FoodType.Main ? "主菜" : "配菜")
+		</td>
+		
+        <td>
+            @(f.IsEnabled ? "啟用" : "停用")
+        </td>
+
+        <td>
+            <!-- 切換 主菜 / 配菜 -->
+            <form method="post" asp-page-handler="ToggleType" style="display:inline;">
+                <input type="hidden" name="id" value="@f.Id" />
+                <button type="submit">
+                    切換分類
+                </button>
+            </form>
+
+            <!-- 啟用 / 停用 -->
+            <form method="post" asp-page-handler="Toggle" style="display:inline; margin-left:6px;">
+                <input type="hidden" name="id" value="@f.Id" />
+                <button type="submit">
+                    @(f.IsEnabled ? "停用" : "啟用")
+                </button>
+            </form>
+        </td>
+    </tr>
+}
+</table>

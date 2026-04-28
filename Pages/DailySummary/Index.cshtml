@@ -1,0 +1,61 @@
+@page
+@model DailySummaryModel
+@{
+    ViewData["Title"] = "餐點總覽";
+}
+
+<h1 style="font-size:32px;">一週餐點總覽</h1>
+
+<p style="font-size:18px; color:gray;">
+    顯示期間：
+    @Model.WeekStart.ToString("MM/dd") ～ @Model.WeekEnd.ToString("MM/dd")
+</p>
+
+<table border="1" width="100%" cellpadding="12"
+       style="font-size:18px; border-collapse:collapse;">
+    <tr>
+        <th>日期</th>
+        <th style="background:#e3f2fd;">🌅 早餐</th>
+        <th style="background:#e8f5e9;">🍱 午餐</th>
+        <th style="background:#fff3e0;">🍽️ 晚餐</th>
+		<th style="background:#ede7f6;">🌙 宵夜</th>
+    </tr>
+
+@for (var d = Model.WeekStart; d <= Model.WeekEnd; d = d.AddDays(1))
+{
+    var isToday = d.Date == DateTime.Today;
+
+    <tr style="
+        @(isToday
+            ? "background-color:#fffde7; border:3px solid #fbc02d;"
+            : "")">
+        <td style="font-weight:@(isToday ? "bold" : "normal")">
+            @d.ToString("MM/dd (ddd)")
+            @if (isToday)
+            {
+                <span style="color:#f57f17;">（今天）</span>
+            }
+        </td>
+
+		<td style="background:#e3f2fd; white-space:pre-line;">
+			@Model.GetFoodsText(d, MealType.Breakfast)
+		</td>
+		
+        <td style="background:#e8f5e9; white-space:pre-line;">
+            @Model.GetFoodsText(d, MealType.Lunch)
+        </td>
+
+        <td style="background:#fff3e0; white-space:pre-line;">
+            @Model.GetFoodsText(d, MealType.Dinner)
+        </td>
+		
+		<td style="background:#ede7f6; white-space:pre-line;">
+			@Model.GetFoodsText(d, MealType.MidnightSnack)
+		</td>
+    </tr>
+}
+</table>
+
+<p style="margin-top:15px; color:gray;">
+    尚未＝該餐未填寫
+</p>

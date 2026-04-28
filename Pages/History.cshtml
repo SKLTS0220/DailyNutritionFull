@@ -1,0 +1,4 @@
+@page
+@model HistoryModel
+<h1>安心對比</h1>
+@if(Model.Today!=null && Model.Yesterday!=null){<h2>@(Model.Today.Status==Model.Yesterday.Status?"✅ 差不多":"⚠ 有不同")</h2>}else{<h2>尚無資料</h2>}
